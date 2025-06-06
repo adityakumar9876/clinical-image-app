@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Clinical Image & Notes Capture</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: Arial, sans-serif; background: #f5f5f5; margin: 0; padding: 0; }
+        .container { max-width: 480px; margin: 30px auto; background: #fff; box-shadow: 0 0 10px #ddd; border-radius: 8px; padding: 24px; }
+        h2 { text-align: center; color: #333; }
+        .form-group { margin-bottom: 18px; }
+        label { display: block; margin-bottom: 6px; color: #555; }
+        input[type="file"], textarea, input[type="text"] {
+            width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 1em;
+        }
+        textarea { min-height: 80px; resize: vertical; }
+        .preview-img {
+            width: 100%; max-height: 250px; margin-top: 10px; object-fit: contain; border: 1px solid #eee; border-radius: 6px;
+        }
+        button {
+            background: #007bff; color: #fff; border: none; padding: 10px 18px; border-radius: 4px; font-size: 1em; cursor: pointer;
+            width: 100%;
+        }
+        button:hover { background: #0056b3; }
+        .success { color: green; text-align: center; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Clinical Image & Notes Capture</h2>
+        <form id="clinicalForm">
+            <div class="form-group">
+                <label for="patientName">Patient Name:</label>
+                <input type="text" id="patientName" name="patientName" required>
+            </div>
+            <div class="form-group">
+                <label for="clinicalImage">Capture Clinical Image:</label>
+                <input type="file" accept="image/*" capture="environment" id="clinicalImage" name="clinicalImage" required>
+                <img id="imgPreview" class="preview-img" src="" alt="" style="display:none;">
+            </div>
+            <div class="form-group">
+                <label for="notes">Clinical Notes:</label>
+                <textarea id="notes" name="notes" placeholder="Write clinical notes..." required></textarea>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+        <div class="success" id="successMsg" style="display:none;">Submission successful!</div>
+    </div>
+    <script>
+        // Image preview
+        document.getElementById('clinicalImage').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('imgPreview');
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    preview.src = evt.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            } else {
+                preview.style.display = 'none';
+                preview.src = '';
+            }
+        });
+
+        // Handle form submission
+        document.getElementById('clinicalForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Here you would send the data to your server (via AJAX/fetch or form POST)
+            // For demo, just show a success message and reset
+            document.getElementById('successMsg').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('successMsg').style.display = 'none';
+                document.getElementById('clinicalForm').reset();
+                document.getElementById('imgPreview').style.display = 'none';
+            }, 1500);
+        });
+    </script>
+</body>
+</html>
